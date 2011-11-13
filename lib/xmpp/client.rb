@@ -5,14 +5,16 @@ class XMPP::Client < XMLStreaming::Client
   attr :state
   attr :callbacks
   attr :sasl
+  attr :ui
 
-  def self.connect(jid)
+  def self.connect(ui, jid)
     jid = XMPP::JID.new(jid) unless jid.is_a?(XMPP::JID)
     xmpp_host = jid.resolve_host
-    EM.connect(xmpp_host, DEFAULT_PORT, self, jid)
+    EM.connect(xmpp_host, DEFAULT_PORT, self, ui, jid)
   end
 
-  def initialize(jid=nil)
+  def initialize(ui, jid=nil)
+    @ui = ui
     @jid = jid.is_a?(XMPP::JID) ? jid : XMPP::JID.new(jid)
     @callbacks = XMPP::Client::Callbacks.new
     @sasl = XMPP::SASL.new(self)
@@ -75,6 +77,7 @@ class XMPP::Client < XMLStreaming::Client
         end
         next(params)
       end
+      ui.trigger(:auth_params, :params => params)
     end
   end
 

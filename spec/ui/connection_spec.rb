@@ -18,6 +18,20 @@ describe UI::Connection do
     subject.client.should be_nil
   end
 
+  describe '#trigger' do
+    before do
+      @arguments = ['my_event', { :foo => 'bar' }]
+      subject.stub(:send_data)
+    end
+
+    it "sends a JSON string" do
+      subject.should_receive(:send_data).
+        with('{"event":"my_event","data":{"foo":"bar"}}')
+      execute
+    end
+  end
+
+
   describe '#on_open'
 
   describe '#on_message' do
@@ -27,7 +41,7 @@ describe UI::Connection do
       @arguments = [mock!('env'), @msg]
       subject.stub(
               :controller => mock!('controller',
-                     :bar => nil)
+                     :call_action => nil)
               )
     end
 
@@ -38,7 +52,7 @@ describe UI::Connection do
 
     it "calls the appropriate controller and action" do
       subject.should_receive(:controller).with('foo')
-      @controller.should_receive(:bar).with("foo", "bar")
+      @controller.should_receive(:call_action).with('bar', "foo", "bar")
       execute
     end
   end
@@ -53,6 +67,24 @@ describe UI::Connection do
     it "initializes the right controller klass" do
       @controller_klass.should_receive(:new).with(subject)
       execute.should eq @controller
+    end
+  end
+
+  describe '#start_xmpp' do
+    before do
+      @arguments = ['hamlet@denmark.lit']
+      XMPP::Client.stub(:connect => mock!('client'))
+    end
+
+    it "connects through XMPP::Client" do
+      XMPP::Client.should_receive(:connect).
+        with(subject, 'hamlet@denmark.lit')
+      execute
+    end
+
+    it "sets the 'client' attribute" do
+      execute
+      subject.client.should eq @client
     end
   end
 end

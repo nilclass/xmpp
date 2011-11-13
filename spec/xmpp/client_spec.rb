@@ -10,8 +10,13 @@ describe XMPP::Client do
     subject { described_class.allocate }
 
     before do
-      @arguments = ['hamlet@denmark.lit']
+      @arguments = [mock!('ui'), 'hamlet@denmark.lit']
       subject.stub(:jump => nil)
+    end
+
+    it "sets the UI" do
+      execute
+      subject.ui.should eq @ui
     end
 
     it "sets the jid" do
@@ -21,7 +26,7 @@ describe XMPP::Client do
     end
 
     it "can take a JID object" do
-      execute(XMPP::JID.new('hamlet@denmark.lit'))
+      execute(@ui, XMPP::JID.new('hamlet@denmark.lit'))
       subject.jid.to_s.should eq 'hamlet@denmark.lit'
     end
 
@@ -39,7 +44,7 @@ describe XMPP::Client do
   subject {
     described_class.allocate.tap { |c|
       c.stub(:send_data) # won't work w/o EM running
-      c.send(:initialize, 'hamlet@denmark.lit/behind-the-curtain')
+      c.send(:initialize, mock!('ui'), 'hamlet@denmark.lit/behind-the-curtain')
     }
   }
 
@@ -190,6 +195,7 @@ describe XMPP::Client do
         subject.sasl.stub(:authenticator) { |mech|
           @auths[mech]
         }
+        subject.ui.stub(:trigger)
       end
 
       it "tries to find a SASL authenticator for each mechanism" do
@@ -208,7 +214,13 @@ describe XMPP::Client do
         execute
       end
 
-      pending "passes the params on to the UI"
+      it "passes the params on to the UI" do
+        subject.ui.should_receive(:trigger) { |event, data|
+          event.should eq :auth_params
+          data[:params].should_not be_nil
+        }
+        execute
+      end
     end
   end
 
@@ -264,7 +276,7 @@ describe XMPP::Client do
   describe '.connect' do
     before do
       @jid = XMPP::JID.new('hamlet@denmark.lit/behind-the-curtain')
-      @arguments = [@jid]
+      @arguments = [mock!('ui'), @jid]
       EM.stub(:connect)
       @jid.stub(:resolve_host => 'xmpp.denmark.lit')
     end
@@ -274,7 +286,7 @@ describe XMPP::Client do
       XMPP::JID.should_receive(:new).
         with('othello@venice.lit/foo').
         and_return(jid) # << why do I need this???
-      execute('othello@venice.lit/foo')
+      execute(@ui, 'othello@venice.lit/foo')
     end
 
     it "resolves the appropriate host for the domain" do
@@ -283,7 +295,7 @@ describe XMPP::Client do
     end
 
     it "initializes a EM connection" do
-      EM.should_receive(:connect).with('xmpp.denmark.lit', 5222, described_class, @jid)
+      EM.should_receive(:connect).with('xmpp.denmark.lit', 5222, described_class, @ui, @jid)
       execute
     end
   end

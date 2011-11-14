@@ -28,4 +28,5 @@ class XMLStreaming::Stanza < XMLStreaming::Element
   def from ; attributes[:from] ; end
   def to   ; attributes[:to]   ; end
   def type ; attributes[:type] ; end
+  def id   ; attributes[:id]   ; end
 end

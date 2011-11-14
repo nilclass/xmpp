@@ -35,6 +35,10 @@ class XMLStreaming::Element
     @finalized = true
   end
 
+  def attr(key)
+    @attributes[key.to_s] || @attributes[key.to_sym]
+  end
+
   def to_xml(part=nil)
     full_name = prefix ? [prefix, name].join(':') : name
     case part
@@ -44,6 +48,7 @@ class XMLStreaming::Element
       end_xml(full_name)
     else
       [start_xml(full_name),
+        text,
         children.map { |child|
           child.to_xml
         }.join(''),

@@ -82,6 +82,11 @@ describe XMLStreaming::Element do
       execute.should eq '<foo:bar foo="bar" baz="sup\"e\"r" xmlns="uri" xmlns:my-prefix="my-ns"></foo:bar>'
     end
 
+    it "includes the text" do
+      subject.add_text('foobar')
+      execute.should =~ />foobar<\/foo:bar>/
+    end
+
     it "can also just generate the start tag" do
       execute(:start).should eq '<foo:bar foo="bar" baz="sup\"e\"r" xmlns="uri" xmlns:my-prefix="my-ns">'
     end

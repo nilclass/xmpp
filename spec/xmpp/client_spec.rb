@@ -44,7 +44,7 @@ describe XMPP::Client do
   subject {
     described_class.allocate.tap { |c|
       c.stub(:send_data) # won't work w/o EM running
-      c.send(:initialize, mock!('ui'), 'hamlet@denmark.lit/behind-the-curtain')
+      c.send(:initialize, mock!('ui'), 'hamlet@denmark.lit')
     }
   }
 
@@ -306,6 +306,43 @@ describe XMPP::Client do
     it "initializes a EM connection" do
       EM.should_receive(:connect).with('xmpp.denmark.lit', 5739, described_class, @ui, @jid)
       execute
+    end
+  end
+
+  describe '#bind_resource' do
+    before do
+      @callback = nil
+      subject.iq.stub(:set) { |_, cb| @callback = cb }
+      @result = XMLStreaming::Element.
+        simple('bind', '', :xmlns => 'urn:ietf:params:xml:ns:xmpp-bind')
+      @result.add_child(XMLStreaming::Element.simple('jid', 'hamlet@denmark.lit/behind-the-curtain'))
+
+    end
+
+    it "binds to resource" do
+      subject.iq.should_receive(:set) { |element, callback|
+        element.name.should eq 'bind'
+        element.uri.should eq 'urn:ietf:params:xml:ns:xmpp-bind'
+      }
+      execute
+    end
+
+    it "resets the JID when getting a result" do
+      execute
+      @callback.call(@result)
+      subject.jid.to_s.should eq 'hamlet@denmark.lit/behind-the-curtain'
+    end
+
+    it "jumps to :bound, when getting a result" do
+      execute
+      subject.should_receive(:jump).with(:bound)
+      @callback.call(@result)
+    end
+  end
+
+  describe '#iq' do
+    it "is an IQFactory" do
+      execute.should be_a(XMPP::IQFactory)
     end
   end
 end

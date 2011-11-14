@@ -13,4 +13,5 @@ module XMPP
   require "#{root}/sasl.rb"
   require "#{root}/sasl/authenticator.rb"
   require "#{root}/sasl/authenticator/plain.rb"
+  require "#{root}/iq_factory.rb"
 end

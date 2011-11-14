@@ -4,6 +4,7 @@ class XMPP::Client < XMLStreaming::Client
   attr :callbacks
   attr :sasl
   attr :ui
+  attr :iq
 
   def self.connect(ui, jid)
     jid = XMPP::JID.new(jid) unless jid.is_a?(XMPP::JID)
@@ -16,6 +17,7 @@ class XMPP::Client < XMLStreaming::Client
     @jid = jid.is_a?(XMPP::JID) ? jid : XMPP::JID.new(jid)
     @callbacks = XMPP::Client::Callbacks.new
     @sasl = XMPP::SASL.new(self)
+    @iq = XMPP::IQFactory.new(self)
     jump(:init)
     super()
   end
@@ -37,7 +39,6 @@ class XMPP::Client < XMLStreaming::Client
   end
 
   def receive_stanza(stanza)
-    log(:receive, stanza.to_s)
     callbacks.call(stanza.name.to_sym, stanza)
   end
 
@@ -80,7 +81,33 @@ class XMPP::Client < XMLStreaming::Client
       else
         ui.trigger(:auth_failure, :message => "No usable Authenticator. Server supports mechanisms: #{features.mechanisms.join(', ')}")
       end
+    elsif features.bind?
+      bind_resource
     end
+  end
+
+  def bind_resource
+    bind = XMLStreaming::Element.new('bind', {}, nil, 'urn:ietf:params:xml:ns:xmpp-bind', [])
+    iq.set(bind) do |result|
+      @jid = XMPP::JID.new(result.children.first.text)
+      jump(:bound)
+    end
+  end
+
+  def on_bound
+    ui.trigger(:bound, :jid => @jid.to_s)
+    start_session
+  end
+
+  def start_session
+    session = XMLStreaming::Element.new('session', {}, nil, 'urn:ietf:params:xml:ns:xmpp-session', [])
+    iq.set(session) do |result|
+      jump(:ready)
+    end
+  end
+
+  def on_ready
+    ui.trigger(:ready)
   end
 
   def ssl_handshake_completed
@@ -94,5 +121,12 @@ class XMPP::Client < XMLStreaming::Client
       start_tls
     end
     send_stanza(XMLStreaming::Element.new('starttls', {}, nil, 'urn:ietf:params:xml:ns:xmpp-tls', []))
+  end
+
+  def on_auth
+    log(:info, "Authenticated")
+    ui.trigger(:auth_success)
+    post_init
+    jump(:init)
   end
 end

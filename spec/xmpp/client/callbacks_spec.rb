@@ -76,6 +76,15 @@ describe XMPP::Client::Callbacks do
       subject.call(:message, 'foo')
       @m_called.should be_nil
     end
+
+    it "can be passed multiple IDs" do
+      @id2 = subject.add(:presence) { |arg| @p_called = arg }
+      execute(@id, @id2)
+      subject.call(:message, 'foo')
+      subject.call(:presence, 'bar')
+      @m_called.should be_nil
+      @p_called.should be_nil
+    end
   end
 
 end

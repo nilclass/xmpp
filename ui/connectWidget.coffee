@@ -1,22 +1,48 @@
 
 window.connectWidget = ->
-    widget = div('connect-widget')
-    form = div('form')
-    jidInput = input('jid', 'text', window.urlParam('jid'))
-    connectButton = button("Connect")
-    connectButton.click ->
-        callAction('main', 'connect', jidInput.val())
-    info = div('info')
-    bindEvent 'connecting', (evt) ->
-        log(info, "Connecting " + evt.jid + "...")
-    bindEvent 'auth_params', (evt) ->
-        log(info, "Please Authenticate.")
-    bindEvent 'auth_failure', (evt) ->
-        log(info, evt.message)
+  widget = div('connect-widget')
 
-    form.append(label('jid', 'JID'))
-    form.append(jidInput)
-    form.append(connectButton)
-    widget.append(info)
-    widget.append(form)
-    return widget
+  hide = ->
+    widget.animate
+      'margin-top': - widget.outerHeight()
+
+  loginForm = div('form')
+  jidInput = input('jid', 'text', window.urlParam('jid'))
+  connectButton = button("Connect")
+  connectButton.click ->
+    callAction('main', 'connect', jidInput.val())
+  bindEvent 'connecting', (evt) ->
+    log(logTarget, "Connecting " + evt.jid + "...")
+  bindEvent 'auth_params', (evt) ->
+    mechs = ''
+    for mech, params of evt.params
+      mechs += ' ' + mech
+      authForm = form()
+      authForm.append(text("Mechanism: " + mech))
+      for key, l of params
+        row = div('row')
+        row.append(label(key, l))
+        row.append(input(key, 'password'))
+        authForm.append(row)
+      authForm.append(submit("Authenticate"))
+      loginForm.append(authForm)
+      authForm.submit ->
+        try
+          callAction 'main', 'auth',
+            mechanism: mech
+            params: authForm.serializeObject()
+        catch exc
+          console.log(exc)
+        return false
+    log(logTarget, "Authentication Mechanisms: " + mechs)
+
+  bindEvent 'auth_success', (evt) ->
+    hide()
+  bindEvent 'auth_failure', (evt) ->
+    log(logTarget, evt.message)
+
+  loginForm.append(label('jid', 'JID'))
+  loginForm.append(jidInput)
+  loginForm.append(connectButton)
+  widget.append(loginForm)
+  return widget

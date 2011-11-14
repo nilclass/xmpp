@@ -9,9 +9,11 @@ class XMPP::Client::Callbacks
     return build_id(type)
   end
 
-  def remove(id)
-    type, index = parse_id(id)
-    @map[type][index] = nil
+  def remove(*ids)
+    ids.each do |id|
+      type, index = parse_id(id)
+      @map[type][index] = nil
+    end
   end
 
   def once(type, &block)
@@ -25,6 +27,8 @@ class XMPP::Client::Callbacks
     @map[type.to_sym].each do |cb|
       cb.call(*args) if cb
     end
+  rescue => exc
+    $stderr.puts "FAILED TO EXECUTE CALLBACKS FOR #{type}:", "#{exc.message} (#{exc.class})", *exc.backtrace
   end
 
   private

@@ -16,6 +16,10 @@ class UI::Connection < Rack::WebSocket::Application
     $stderr.puts "#{exc.message} (#{exc.class.name})", *exc.backtrace
   end
 
+  def on_close(env)
+    client.close_connection if client
+  end
+
   def trigger(event, data={})
     send_data(JSON.dump(:event => event.to_s, :data => data))
   end

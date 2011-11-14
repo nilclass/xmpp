@@ -75,14 +75,16 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   overflow: hidden;
   *zoom: 1;
   font-family: sans-serif;
+  position: relative;
+  min-height: 350px;
 }
 
-/* line 16, ../sass/screen.scss */
+/* line 18, ../sass/screen.scss */
 input {
   border: solid 1px #ddd;
 }
 
-/* line 31, ../sass/screen.scss */
+/* line 33, ../sass/screen.scss */
 .connect-widget {
   width: 50%;
   margin: auto;
@@ -91,17 +93,22 @@ input {
   padding: 8px;
   height: 300px;
 }
-/* line 36, ../sass/screen.scss */
-.connect-widget .info {
-  float: right;
-  width: 50%;
+
+/* line 39, ../sass/screen.scss */
+#log {
+  position: absolute;
+  top: -1px;
+  right: 0px;
+  border: solid 1px #eee;
   background: white;
+  width: 230px;
+  min-height: 20px;
+  max-height: 180px;
+  overflow: auto;
+  font-size: 0.8em;
   font-family: monospace;
-  overflow: scroll;
-  white-space: nowrap;
-  height: 100%;
 }
-/* line 44, ../sass/screen.scss */
-.connect-widget .info div {
+/* line 51, ../sass/screen.scss */
+#log div {
   padding: 5px;
 }

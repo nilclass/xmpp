@@ -2,16 +2,16 @@
 class XMPP::JID
   DEFAULT_PORT = 5222
 
-  attr :local_name
+  attr :local_part
   attr :hostname
   attr :resource
 
   def initialize(jid)
-    _, @local_name, @hostname, @resource = *jid.match(/^([^@]+)@([^\/]+)(?:\/(.+))?$/)
+    _, @local_part, @hostname, @resource = *jid.match(/^([^@]+)@([^\/]+)(?:\/(.+))?$/)
   end
 
   def to_s
-    "#{local_name}@#{hostname}#{resource ? ('/' + resource) : ''}"
+    "#{local_part}@#{hostname}#{resource ? ('/' + resource) : ''}"
   end
 
   def resolve_host

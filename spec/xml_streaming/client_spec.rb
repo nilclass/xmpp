@@ -51,7 +51,7 @@ describe XMLStreaming::Client do
     it "passes the stanza on to send_data as XML" do
       stanza = XMLStreaming::Stanza.new('foo', { :bar => 'baz' }, nil, nil, [])
       stanza.add_child(XMLStreaming::Stanza.new('bar', {}, nil, nil, []))
-      subject.should_receive(:send_data).with('<foo bar="baz"><bar></bar></foo>')
+      subject.should_receive(:send_data).with('<foo bar="baz"><bar/></foo>')
       execute(stanza)
     end
   end

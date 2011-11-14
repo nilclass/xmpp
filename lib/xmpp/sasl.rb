@@ -1,5 +1,7 @@
 
 class XMPP::SASL
+  NS = 'urn:ietf:params:xml:ns:xmpp-sasl'
+
   class << self
     def register(mechanism, klass)
       authenticators[mechanism] = klass

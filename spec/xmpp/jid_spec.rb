@@ -7,8 +7,8 @@ describe XMPP::JID do
       @instance = execute('hamlet@denmark.lit/behind-the-curtain')
     end
 
-    it "sets the local_name" do
-      @instance.local_name.should eq 'hamlet'
+    it "sets the local_part" do
+      @instance.local_part.should eq 'hamlet'
     end
 
     it "sets the hostname" do

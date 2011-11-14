@@ -10,7 +10,7 @@ window.bindEvent = (event, callback) ->
 
 window.socket.onmessage = (msg) ->
     event = $.parseJSON(msg.data)
-    console.log("EVENT", event)
+    console.log("EVENT", event.event, event.data)
     if callbacks = eventMap[event.event]
         $(callbacks).each (i, cb) -> cb(event.data)
 

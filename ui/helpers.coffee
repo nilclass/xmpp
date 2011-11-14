@@ -18,6 +18,12 @@ window.input = (name, type, value) ->
         name + '" type="' + type + '"' +
         ' value="' + (value || '') + '">')
 
+window.form = ->
+  $('<form></form>')
+
+window.submit = (value) ->
+  window.input('', 'submit', value)
+
 window.button = (value) ->
     $('<button>' + value + '</button>')
 
@@ -29,3 +35,9 @@ window.text = (text) ->
 
 window.log = (target, message) ->
         target.append(text(message))
+
+$.fn.extend
+  serializeObject: ->
+    object = {}
+    object[i.name] = i.value for i in this.serializeArray()
+    return object

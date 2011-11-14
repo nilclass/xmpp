@@ -18,6 +18,10 @@ class XMPP::Features < XMLStreaming::Stanza
     }.compact
   end
 
+  def bind?
+    children.select {|child| child.name == 'bind' }.any?
+  end
+
   def to_s
     "#<XMPP::Features #{children.map(&:name).join(', ')}>"
   end

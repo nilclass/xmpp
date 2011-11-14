@@ -11,6 +11,8 @@
 #container {
     @include container;
     font-family:sans-serif;
+    position:relative;
+    min-height:350px;
 }
 
 input {
@@ -32,17 +34,21 @@ input {
     @include center-widget;
     @include widget-background;
     height: 300px;
+}
 
-    .info {
-        float:right;
-        width:50%;
-        background:white;
-        font-family:monospace;
-        overflow:scroll;
-        white-space:nowrap;
-        height:100%;
-        div {
-            padding:5px;
-        }
+#log {
+    position:absolute;
+    top:-1px;
+    right:0px;
+    border: solid 1px #eee;
+    background:white;
+    width:230px;
+    min-height:20px;
+    max-height:180px;
+    overflow:auto;
+    font-size:0.8em;
+    font-family:monospace;
+    div {
+        padding:5px;
     }
 }

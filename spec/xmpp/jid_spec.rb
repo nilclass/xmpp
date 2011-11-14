@@ -36,7 +36,8 @@ describe XMPP::JID do
                :getresource => mock!('resource',
                  :target => mock!('target',
                    :to_s => 'xmpp.venice.lit'
-                   )
+                   ),
+                 :port => 5789
                  )
                )
         )
@@ -54,14 +55,14 @@ describe XMPP::JID do
       execute
     end
 
-    it "returns the target host as a string" do
+    it "returns the target host and port" do
       @target.should_receive(:to_s)
-      execute.should eq 'xmpp.venice.lit'
+      execute.should eq ['xmpp.venice.lit', 5789]
     end
 
-    it "returns the domain itself, in case of a ResolvError" do
+    it "returns the domain itself, with the default port, in case of a ResolvError" do
       @resolver.stub(:getresource).and_raise(Resolv::ResolvError.new)
-      execute.should eq 'venice.lit'
+      execute.should eq ['venice.lit', 5222]
     end
 
   end

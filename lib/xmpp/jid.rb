@@ -1,5 +1,7 @@
 
 class XMPP::JID
+  DEFAULT_PORT = 5222
+
   attr :local_name
   attr :hostname
   attr :resource
@@ -18,8 +20,8 @@ class XMPP::JID
                         "_xmpp-client._tcp.#{hostname}",
                         Resolv::DNS::Resource::IN::ANY)
     target = resource.target
-    return target.to_s
+    return [target.to_s, resource.port]
   rescue Resolv::ResolvError
-    return hostname
+    return [hostname, DEFAULT_PORT]
   end
 end

@@ -10,4 +10,39 @@
 
 #container {
     @include container;
+    font-family:sans-serif;
+}
+
+input {
+    border: solid 1px #ddd;
+}
+
+@mixin center-widget {
+    width: 50%;
+    margin:auto;
+}
+
+@mixin widget-background {
+    border: solid 1px #ddd;
+    background: #eee;
+    padding:8px;
+}
+
+.connect-widget {
+    @include center-widget;
+    @include widget-background;
+    height: 300px;
+
+    .info {
+        float:right;
+        width:50%;
+        background:white;
+        font-family:monospace;
+        overflow:scroll;
+        white-space:nowrap;
+        height:100%;
+        div {
+            padding:5px;
+        }
+    }
 }

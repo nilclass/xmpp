@@ -31,7 +31,6 @@ describe UI::Connection do
     end
   end
 
-
   describe '#on_open'
 
   describe '#on_message' do

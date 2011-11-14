@@ -74,4 +74,34 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   margin: 0 auto;
   overflow: hidden;
   *zoom: 1;
+  font-family: sans-serif;
+}
+
+/* line 16, ../sass/screen.scss */
+input {
+  border: solid 1px #ddd;
+}
+
+/* line 31, ../sass/screen.scss */
+.connect-widget {
+  width: 50%;
+  margin: auto;
+  border: solid 1px #ddd;
+  background: #eee;
+  padding: 8px;
+  height: 300px;
+}
+/* line 36, ../sass/screen.scss */
+.connect-widget .info {
+  float: right;
+  width: 50%;
+  background: white;
+  font-family: monospace;
+  overflow: scroll;
+  white-space: nowrap;
+  height: 100%;
+}
+/* line 44, ../sass/screen.scss */
+.connect-widget .info div {
+  padding: 5px;
 }

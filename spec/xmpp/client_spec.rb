@@ -214,10 +214,19 @@ describe XMPP::Client do
         execute
       end
 
-      it "passes the params on to the UI" do
+      it "triggers auth_params on the UI" do
         subject.ui.should_receive(:trigger) { |event, data|
           event.should eq :auth_params
           data[:params].should_not be_nil
+        }
+        execute
+      end
+
+      it "triggers auth_failure on the UI, if no authenticator is usable" do
+        @features.stub(:mechanisms => ['XOAUTH'])
+        subject.ui.should_receive(:trigger) { |event, data|
+          event.should eq :auth_failure
+          data[:message].should_not be_nil
         }
         execute
       end
@@ -278,7 +287,7 @@ describe XMPP::Client do
       @jid = XMPP::JID.new('hamlet@denmark.lit/behind-the-curtain')
       @arguments = [mock!('ui'), @jid]
       EM.stub(:connect)
-      @jid.stub(:resolve_host => 'xmpp.denmark.lit')
+      @jid.stub(:resolve_host => ['xmpp.denmark.lit', 5739])
     end
 
     it "can take the JID as a string" do
@@ -295,7 +304,7 @@ describe XMPP::Client do
     end
 
     it "initializes a EM connection" do
-      EM.should_receive(:connect).with('xmpp.denmark.lit', 5222, described_class, @ui, @jid)
+      EM.should_receive(:connect).with('xmpp.denmark.lit', 5739, described_class, @ui, @jid)
       execute
     end
   end

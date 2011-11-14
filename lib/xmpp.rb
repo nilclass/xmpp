@@ -9,7 +9,8 @@ module XMPP
   require "#{root}/message.rb"
   require "#{root}/features.rb"
   require "#{root}/client.rb"
+  require "#{root}/client/callbacks.rb"
   require "#{root}/sasl.rb"
   require "#{root}/sasl/authenticator.rb"
-  require "#{root}/client/callbacks.rb"
+  require "#{root}/sasl/authenticator/plain.rb"
 end

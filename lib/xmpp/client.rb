@@ -1,6 +1,4 @@
 class XMPP::Client < XMLStreaming::Client
-  DEFAULT_PORT = 5222
-
   attr :jid
   attr :state
   attr :callbacks
@@ -9,8 +7,8 @@ class XMPP::Client < XMLStreaming::Client
 
   def self.connect(ui, jid)
     jid = XMPP::JID.new(jid) unless jid.is_a?(XMPP::JID)
-    xmpp_host = jid.resolve_host
-    EM.connect(xmpp_host, DEFAULT_PORT, self, ui, jid)
+    xmpp_host, port = jid.resolve_host
+    EM.connect(xmpp_host, port, self, ui, jid)
   end
 
   def initialize(ui, jid=nil)
@@ -77,7 +75,11 @@ class XMPP::Client < XMLStreaming::Client
         end
         next(params)
       end
-      ui.trigger(:auth_params, :params => params)
+      if params.size > 0
+        ui.trigger(:auth_params, :params => params)
+      else
+        ui.trigger(:auth_failure, :message => "No usable Authenticator. Server supports mechanisms: #{features.mechanisms.join(', ')}")
+      end
     end
   end
 

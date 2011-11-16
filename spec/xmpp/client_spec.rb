@@ -66,11 +66,6 @@ describe XMPP::Client do
       execute
     end
 
-    it "logs the stanza" do
-      subject.should_receive(:log).
-        with(:receive, @stanza.to_s)
-      execute
-    end
   end
 
   describe '#callbacks' do
@@ -110,8 +105,17 @@ describe XMPP::Client do
   end
 
   describe '#unbind' do
+    before do
+      subject.ui.stub(:trigger)
+    end
+
     it "jumps to the :closed state" do
       subject.should_receive(:jump).with(:closed)
+      execute
+    end
+
+    it "triggers the connection_closed UI event" do
+      subject.ui.should_receive(:trigger).with(:connection_closed)
       execute
     end
   end
@@ -169,14 +173,26 @@ describe XMPP::Client do
 
   describe '#upgrade_stream' do
     before do
-      @arguments = [mock!('features', :starttls? => false, :mechanisms? => false)]
+      @arguments = [mock!('features')]
+      @stub_features = ->(opts={}) {
+        @features.stub({:starttls? => false, :mechanisms? => false, :bind? => false}.merge(opts))
+      }
+      @stub_features.call
     end
 
     it "negotiates tls if feature is given" do
       subject.should_not_receive(:negotiate_tls)
       execute
-      @features.stub(:starttls? => true)
+      @stub_features.call(:starttls? => true)
       subject.should_receive(:negotiate_tls)
+      execute
+    end
+
+    it "binds to a resource, if feature is given" do
+      subject.should_not_receive(:bind_resource)
+      execute
+      @stub_features.call(:bind? => true)
+      subject.should_receive(:bind_resource)
       execute
     end
 
@@ -240,6 +256,10 @@ describe XMPP::Client do
   end
 
   describe '#ssl_handshake_completed' do
+    before do
+      subject.ui.stub(:trigger)
+    end
+
     it "calls post_init again" do
       subject.should_receive(:post_init)
       execute
@@ -247,6 +267,11 @@ describe XMPP::Client do
 
     it "jumps to the :init state" do
       subject.should_receive(:jump).with(:init)
+      execute
+    end
+
+    it "triggers tls_negotiated" do
+      subject.ui.should_receive(:trigger).with(:tls_negotiated)
       execute
     end
   end
@@ -280,6 +305,9 @@ describe XMPP::Client do
       subject.should_receive(:start_tls)
       subject.callbacks.call(:proceed, mock!('proceed'))
     end
+
+    pending "verifies the certificate"
+    pending "handles failures"
   end
 
   describe '.connect' do
@@ -316,7 +344,6 @@ describe XMPP::Client do
       @result = XMLStreaming::Element.
         simple('bind', '', :xmlns => 'urn:ietf:params:xml:ns:xmpp-bind')
       @result.add_child(XMLStreaming::Element.simple('jid', 'hamlet@denmark.lit/behind-the-curtain'))
-
     end
 
     it "binds to resource" do
@@ -329,6 +356,7 @@ describe XMPP::Client do
 
     it "resets the JID when getting a result" do
       execute
+      subject.stub(:jump)
       @callback.call(@result)
       subject.jid.to_s.should eq 'hamlet@denmark.lit/behind-the-curtain'
     end
@@ -338,11 +366,19 @@ describe XMPP::Client do
       subject.should_receive(:jump).with(:bound)
       @callback.call(@result)
     end
+
+    pending "uses the resource in the given JID, if present"
   end
 
   describe '#iq' do
     it "is an IQFactory" do
       execute.should be_a(XMPP::IQFactory)
+    end
+  end
+
+  describe '#message' do
+    it "is a MessageFactory" do
+      execute.should be_a(XMPP::MessageFactory)
     end
   end
 end

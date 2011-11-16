@@ -5,6 +5,7 @@ class XMPP::Client < XMLStreaming::Client
   attr :sasl
   attr :ui
   attr :iq
+  attr :message
 
   def self.connect(ui, jid)
     jid = XMPP::JID.new(jid) unless jid.is_a?(XMPP::JID)
@@ -18,6 +19,7 @@ class XMPP::Client < XMLStreaming::Client
     @callbacks = XMPP::Client::Callbacks.new
     @sasl = XMPP::SASL.new(self)
     @iq = XMPP::IQFactory.new(self)
+    @message = XMPP::MessageFactory.new(self)
     jump(:init)
     super()
   end
@@ -32,6 +34,7 @@ class XMPP::Client < XMLStreaming::Client
   end
 
   def unbind
+    ui.trigger(:connection_closed)
     jump(:closed)
   end
 
@@ -112,6 +115,7 @@ class XMPP::Client < XMLStreaming::Client
 
   def ssl_handshake_completed
     log(:info, "SSL handshake completed")
+    ui.trigger(:tls_negotiated)
     post_init
     jump(:init)
   end

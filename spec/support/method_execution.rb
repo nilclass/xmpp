@@ -4,7 +4,7 @@ module MethodExecution
 
     # find the nearest method name
     while focus = focus[:example_group] do
-      method = /^(?:(\#)|(\.|:))([\w?!=]+)$/.match(focus[:description]) and break
+      method = /^(?:(\#)|(\.|:))([\w?!=~]+)$/.match(focus[:description]) and break
     end
 
     arguments = @arguments || [] if arguments.empty?

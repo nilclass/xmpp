@@ -1,4 +1,9 @@
 
+def XMPP::JID(jid)
+  return jid if jid.kind_of?(XMPP::JID)
+  XMPP::JID.new(jid)
+end
+
 class XMPP::JID
   DEFAULT_PORT = 5222
 
@@ -10,8 +15,20 @@ class XMPP::JID
     _, @local_part, @hostname, @resource = *jid.match(/^([^@]+)@([^\/]+)(?:\/(.+))?$/)
   end
 
+  def ==(other)
+    other.to_s == to_s
+  end
+
+  def =~(other)
+    XMPP::JID(other).bare == bare
+  end
+
+  def bare
+    "#{local_part}@#{hostname}"
+  end
+
   def to_s
-    "#{local_part}@#{hostname}#{resource ? ('/' + resource) : ''}"
+    "#{bare}#{resource ? ('/' + resource) : ''}"
   end
 
   def resolve_host

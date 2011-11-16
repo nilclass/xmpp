@@ -84,31 +84,242 @@ input {
   border: solid 1px #ddd;
 }
 
-/* line 33, ../sass/screen.scss */
+/* line 73, ../sass/screen.scss */
+.log-widget {
+  border: solid 1px #ddd;
+  background: #eee;
+  padding: 8px;
+  position: absolute;
+  top: -1px;
+  right: 0px;
+  min-height: 20px;
+  max-height: 180px;
+  display: inline;
+  float: left;
+  overflow: hidden;
+  width: 20.003%;
+  margin-right: 1.042%;
+  overflow: auto;
+}
+/* line 81, ../sass/screen.scss */
+.log-widget div {
+  border-bottom: groove 2px #eee;
+  font-family: monospace;
+  font-size: 0.8em;
+  padding: 5px;
+}
+/* line 50, ../sass/screen.scss */
+.log-widget div:last-child {
+  border-style: none;
+}
+
+/* line 90, ../sass/screen.scss */
 .connect-widget {
-  width: 50%;
   margin: auto;
   border: solid 1px #ddd;
   background: #eee;
   padding: 8px;
+  width: 300px;
   height: 300px;
 }
 
-/* line 39, ../sass/screen.scss */
-#log {
-  position: absolute;
-  top: -1px;
-  right: 0px;
-  border: solid 1px #eee;
-  background: white;
-  width: 230px;
-  min-height: 20px;
-  max-height: 180px;
-  overflow: auto;
-  font-size: 0.8em;
-  font-family: monospace;
+/* line 97, ../sass/screen.scss */
+.roster-widget {
+  border: solid 1px #ddd;
+  background: #eee;
+  padding: 8px;
+  display: inline;
+  float: left;
+  overflow: hidden;
+  width: 24.212%;
+  margin-right: 1.042%;
 }
-/* line 51, ../sass/screen.scss */
-#log div {
-  padding: 5px;
+/* line 101, ../sass/screen.scss */
+.roster-widget .item {
+  border-bottom: groove 2px #eee;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+  margin: 0 8px;
+  font-size: 0.9em;
+  padding-bottom: 8px;
+  cursor: default;
+}
+/* line 50, ../sass/screen.scss */
+.roster-widget .item:last-child {
+  border-style: none;
+}
+/* line 112, ../sass/screen.scss */
+.roster-widget .item:last-child {
+  border-style: none;
+}
+/* line 116, ../sass/screen.scss */
+.roster-widget .item .jid {
+  padding-left: 22px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+/* line 120, ../sass/screen.scss */
+.roster-widget .item .jid:hover {
+  background: #ccf;
+}
+/* line 125, ../sass/screen.scss */
+.roster-widget .item .status {
+  position: absolute;
+  top: 7px;
+  left: 3px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -o-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -khtml-border-radius: 8px;
+  border-radius: 8px;
+  height: 16px;
+  width: 16px;
+}
+/* line 132, ../sass/screen.scss */
+.roster-widget .item .status.available {
+  background: green;
+}
+/* line 133, ../sass/screen.scss */
+.roster-widget .item .status.away {
+  background: blue;
+}
+/* line 134, ../sass/screen.scss */
+.roster-widget .item .status.offline {
+  background: #333;
+}
+/* line 137, ../sass/screen.scss */
+.roster-widget .item .actions {
+  display: none;
+}
+/* line 56, ../sass/screen.scss */
+.roster-widget .item .actions button {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+}
+/* line 7, ../../../../../../home/nilclass/.rvm/gems/ruby-1.9.3-head/gems/compass-0.11.5/frameworks/compass/stylesheets/compass/css3/_inline-block.scss */
+.roster-widget .item .actions button {
+  *display: inline;
+}
+/* line 59, ../sass/screen.scss */
+.roster-widget .item .actions .dropdown {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+}
+/* line 7, ../../../../../../home/nilclass/.rvm/gems/ruby-1.9.3-head/gems/compass-0.11.5/frameworks/compass/stylesheets/compass/css3/_inline-block.scss */
+.roster-widget .item .actions .dropdown {
+  *display: inline;
+}
+/* line 62, ../sass/screen.scss */
+.roster-widget .item .actions .dropdown menu {
+  display: none;
+}
+/* line 140, ../sass/screen.scss */
+.roster-widget .item .actions.visible {
+  display: block;
+}
+
+/* line 145, ../sass/screen.scss */
+.conversations {
+  display: inline;
+  float: left;
+  overflow: hidden;
+  width: 49.466%;
+  margin-right: 1.042%;
+}
+
+/* line 149, ../sass/screen.scss */
+.hidden {
+  display: none;
+}
+
+/** forms are used semantically, they aren't real blocks, we're not doing print design here! **/
+/* line 152, ../sass/screen.scss */
+form {
+  display: inline;
+}
+
+/* line 154, ../sass/screen.scss */
+.conversation-widget {
+  border: solid 1px #ddd;
+  background: #eee;
+  padding: 8px;
+}
+/* line 157, ../sass/screen.scss */
+.conversation-widget header {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  cursor: default;
+  padding-bottom: 4px;
+  margin-bottom: 5px;
+  color: #475;
+  border-bottom: solid 1px #ccc;
+}
+/* line 166, ../sass/screen.scss */
+.conversation-widget footer {
+  margin-top: 5px;
+  padding-top: 4px;
+  border-top: solid 1px #ccc;
+}
+/* line 171, ../sass/screen.scss */
+.conversation-widget footer .message {
+  background: #fff;
+}
+/* line 173, ../sass/screen.scss */
+.conversation-widget footer .message .from {
+  background: #ddd;
+}
+/* line 177, ../sass/screen.scss */
+.conversation-widget .messages {
+  max-height: 150px;
+  overflow: auto;
+}
+/* line 182, ../sass/screen.scss */
+.conversation-widget .message {
+  background: #ddd;
+  margin-bottom: 8px;
+}
+/* line 184, ../sass/screen.scss */
+.conversation-widget .message .from {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -o-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  border-radius: 4px;
+  border-style: solid solid solid none;
+  border-color: #fff;
+  border-width: 2px;
+  color: #34a;
+  padding: 3px;
+}
+/* line 7, ../../../../../../home/nilclass/.rvm/gems/ruby-1.9.3-head/gems/compass-0.11.5/frameworks/compass/stylesheets/compass/css3/_inline-block.scss */
+.conversation-widget .message .from {
+  *display: inline;
+}
+/* line 194, ../sass/screen.scss */
+.conversation-widget .message .body {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  border: none;
+  background: none;
+}
+/* line 7, ../../../../../../home/nilclass/.rvm/gems/ruby-1.9.3-head/gems/compass-0.11.5/frameworks/compass/stylesheets/compass/css3/_inline-block.scss */
+.conversation-widget .message .body {
+  *display: inline;
 }

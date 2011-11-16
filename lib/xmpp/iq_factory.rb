@@ -13,6 +13,18 @@ class XMPP::IQFactory
     end
   end
 
+  def query(namespace, &cb)
+    q = XMLStreaming::Element.new('query', {}, nil, namespace, [])
+    get(q, &cb)
+  end
+
+  def get(child=nil, options={}, &block)
+    iq = build_iq(options.merge(:type => 'get'))
+    iq.add_child(child)
+    @callbacks[iq.id] = block
+    client.send_stanza(iq)
+  end
+
   def set(child=nil, options={}, &block)
     iq = build_iq(options.merge(:type => 'set'))
     iq.add_child(child)

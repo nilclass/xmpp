@@ -79,12 +79,17 @@ describe XMLStreaming::Element do
     subject { described_class.new('bar', { :foo => 'bar', :baz => 'sup"e"r' }, 'foo', 'uri', [[nil, 'uri'], ['my-prefix', 'my-ns']]) }
 
     it "works correctly" do
-      execute.should eq '<foo:bar foo="bar" baz="sup\"e\"r" xmlns="uri" xmlns:my-prefix="my-ns"></foo:bar>'
+      execute.should eq '<foo:bar foo="bar" baz="sup\"e\"r" xmlns="uri" xmlns:my-prefix="my-ns"/>'
     end
 
     it "includes the text" do
       subject.add_text('foobar')
       execute.should =~ />foobar<\/foo:bar>/
+    end
+
+    it "escapes the text" do
+      subject.add_text('<foo/><bar>')
+      execute.should =~ />&lt;foo\/&gt;&lt;bar&gt;<\/foo:bar/
     end
 
     it "can also just generate the start tag" do

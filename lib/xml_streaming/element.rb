@@ -8,6 +8,16 @@ class XMLStreaming::Element
   attr :text
   attr :children
 
+  def self.cast(other)
+    return other if other.class == self
+    self.new(other.name, other.attributes, other.prefix, other.uri, other.namespaces).tap { |e|
+      e.add_text(other.text)
+      other.children.each do |child|
+        e.add_child(child)
+      end
+    }
+  end
+
   # FIXME: spec this, if you use it outside of the specs!
   def self.simple(name, text='', attrs={})
     name, prefix = *name.split(':')
@@ -47,13 +57,18 @@ class XMLStreaming::Element
     when :end
       end_xml(full_name)
     else
-      [start_xml(full_name),
-        text,
-        children.map { |child|
-          child.to_xml
-        }.join(''),
-        end_xml(full_name)
-      ].join('')
+      if text.size > 0 || children.size > 0
+        [start_xml(full_name),
+          escape_text(text),
+          children.map { |child|
+            child.to_xml
+          }.join(''),
+          end_xml(full_name)
+        ].join('')
+      else
+        # self closing
+        start_xml(full_name).sub(/>$/, '/>')
+      end
     end
   end
 
@@ -85,6 +100,17 @@ class XMLStreaming::Element
 
   def end_xml(full_name)
     "</#{full_name}>"
+  end
+
+  def escape_text(text)
+    text.gsub(/([<>])/) { |char|
+      case char
+      when '>'
+        '&gt;'
+      when '<'
+        '&lt;'
+      end
+    }
   end
 end
 

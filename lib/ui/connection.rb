@@ -12,8 +12,8 @@ class UI::Connection < Rack::WebSocket::Application
     message = JSON.load(data)
     controller(message['controller']).
       call_action(message['action'], *message['arguments'])
-  rescue => exc
-    $stderr.puts "#{exc.message} (#{exc.class.name})", *exc.backtrace
+  rescue ControllerNotFound => exc
+    trigger(:exception, :type => exc.class.name, :message => exc.message, :trace => exc.backtrace)
   end
 
   def on_close(env)
@@ -25,9 +25,13 @@ class UI::Connection < Rack::WebSocket::Application
   end
 
   def controller(name)
+    @controllers ||= {}
+    return @controllers[name] if @controllers.has_key?(name)
     klass = UI::Controller.get(name)
-    raise ControllerNotFound unless klass
-    klass.new(self)
+    raise ControllerNotFound.new("No such controller: #{name}") unless klass
+    instance = klass.new(self)
+    @controllers[name] = instance
+    return instance
   end
 
   def start_xmpp(jid)

@@ -10,5 +10,7 @@ module UI
   require "#{root}/controller.rb"
   require "#{root}/controller/base.rb"
   require "#{root}/controller/main.rb"
+  require "#{root}/controller/roster.rb"
+  require "#{root}/controller/conversation.rb"
 
 end

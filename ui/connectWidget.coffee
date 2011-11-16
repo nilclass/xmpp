@@ -36,6 +36,8 @@ window.connectWidget = ->
         return false
     log(logTarget, "Authentication Mechanisms: " + mechs)
 
+  bindEvent 'tls_negotiated', (evt) ->
+    log(logTarget, "TLS negotiated - connection secure.")
   bindEvent 'auth_success', (evt) ->
     hide()
   bindEvent 'auth_failure', (evt) ->

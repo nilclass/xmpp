@@ -20,7 +20,6 @@ input {
 }
 
 @mixin center-widget {
-    width: 50%;
     margin:auto;
 }
 
@@ -30,25 +29,174 @@ input {
     padding:8px;
 }
 
+@mixin absolute-top-right($top, $right) {
+    position: absolute;
+    top: $top;
+    right: $right;
+}
+
+@mixin absolute-top-left($top, $right) {
+    position: absolute;
+    top: $top;
+    left: $right;
+}
+
+@mixin height-constraint($min, $max) {
+    min-height: $min;
+    max-height: $max;
+}
+@mixin separated-child {
+    border-bottom:groove 2px #eee;
+    &:last-child {
+        border-style:none;
+    }
+}
+
+@mixin button-group {
+    button {
+        @include inline-block;
+    }
+    .dropdown {
+        @include inline-block;
+
+        menu {
+            display:none;
+        }
+    }
+}
+
+@mixin user-select($value) {
+    -moz-user-select:$value;
+    -webkit-user-select:$value;
+}
+
+.log-widget {
+    @include widget-background;
+    @include absolute-top-right(-1px, 0px);
+    @include height-constraint(20px, 180px);
+
+    @include column(5);
+    overflow:auto;
+
+    div {
+        @include separated-child;
+
+        font-family:monospace;
+        font-size:0.8em;
+        padding:5px;
+    }
+}
+
 .connect-widget {
     @include center-widget;
     @include widget-background;
+    width: 300px;
     height: 300px;
 }
 
-#log {
-    position:absolute;
-    top:-1px;
-    right:0px;
-    border: solid 1px #eee;
-    background:white;
-    width:230px;
-    min-height:20px;
-    max-height:180px;
-    overflow:auto;
-    font-size:0.8em;
-    font-family:monospace;
-    div {
-        padding:5px;
+.roster-widget {
+    @include widget-background;
+    @include column(6);
+    
+    .item {
+        @include separated-child;
+        @include user-select(none);
+
+        position:relative;
+
+        margin:0 8px;
+        font-size: 0.9em;
+        padding-bottom:8px;
+        cursor:default;
+        
+        &:last-child {
+            border-style:none;
+        }
+
+        .jid {
+            padding-left:22px;
+            padding-top:7px;
+            padding-bottom:7px;
+            &:hover {
+                background:#ccf;
+            }
+        }
+
+        .status {
+            @include absolute-top-left(7px, 3px);
+            @include border-radius(8px);
+
+            height:16px;
+            width:16px;
+
+            &.available { background:green; }
+            &.away { background:blue; }
+            &.offline { background:#333; }
+        }
+
+        .actions {
+            @include button-group;
+            display:none;
+            &.visible { display:block; }
+        }
     }
+}
+
+.conversations {
+    @include column(12);
+}
+
+.hidden { display:none; }
+
+/** forms are used semantically, they aren't real blocks, we're not doing print design here! **/
+form { display:inline; }
+
+.conversation-widget {
+    @include widget-background;
+
+    header {
+        @include user-select(none);
+        cursor:default;
+        padding-bottom:4px;
+        margin-bottom:5px;
+        color: #475;
+        border-bottom:solid 1px #ccc;
+    }
+
+    footer {
+        margin-top:5px;
+        padding-top:4px;
+        border-top:solid 1px #ccc;
+
+        .message {
+            background: #fff;
+            .from { background: #ddd; }
+        }
+    }
+
+    .messages {
+        max-height:150px;
+        overflow:auto;
+    }
+
+    .message {
+        background:#ddd;
+        .from {
+            @include inline-block;
+            @include border-radius(4px);
+
+            border-style: solid solid solid none;
+            border-color:#fff;
+            border-width:2px;
+            color:#34a;
+            padding:3px;
+        }
+        .body {
+            @include inline-block;
+            border:none;
+            background:none;
+        }
+        margin-bottom:8px;
+    }
+    
 }

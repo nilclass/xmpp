@@ -67,6 +67,11 @@ describe UI::Connection do
       @controller_klass.should_receive(:new).with(subject)
       execute.should eq @controller
     end
+
+    it "returns the same instance, when called again" do
+      @controller_klass.stub(:new) { mock!("controller") }
+      subject.controller('foo').should eq execute
+    end
   end
 
   describe '#start_xmpp' do

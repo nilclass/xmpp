@@ -25,8 +25,11 @@ class XMLStreaming::Stanza < XMLStreaming::Element
     end
   end
 
-  def from ; attributes[:from] ; end
-  def to   ; attributes[:to]   ; end
-  def type ; attributes[:type] ; end
-  def id   ; attributes[:id]   ; end
+  def from ; attr(:from) ; end
+  def to   ; attr(:to)   ; end
+  def type ; attr(:type) ; end
+  def id   ; attr(:id)   ; end
+
+  def from_jid ; XMPP::JID(attr(:from)) ; end
+  def to_jid ; XMPP::JID(attr(:from)) ; end
 end

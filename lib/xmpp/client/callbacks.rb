@@ -24,6 +24,7 @@ class XMPP::Client::Callbacks
   end
 
   def call(type, *args)
+    $stderr.puts "CALLING CALLBACKS: #{type} (have: #{@map[type.to_sym].size})"
     @map[type.to_sym].each do |cb|
       cb.call(*args) if cb
     end

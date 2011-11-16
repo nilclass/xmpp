@@ -2,6 +2,12 @@
 require 'spec_helper'
 
 describe XMPP::JID do
+  it "has a typecast method" do
+    jid = XMPP::JID.new('foo@bar/baz')
+    XMPP::JID('foo@bar/baz').should eq jid
+    XMPP::JID(jid).object_id.should eq jid.object_id
+  end
+
   describe '.new' do
     before do
       @instance = execute('hamlet@denmark.lit/behind-the-curtain')
@@ -25,6 +31,48 @@ describe XMPP::JID do
   describe "#to_s" do
     it "returns the original JID" do
       execute.should eq @orig
+    end
+  end
+
+  describe '#bare' do
+    it "returns the JID as a String without the resource" do
+      execute.should eq 'othello@venice.lit'
+    end
+  end
+
+  describe '#==' do
+    it "compares with an equal string" do
+      execute('othello@venice.lit/foo').should be_true
+    end
+
+    it "compares with an equal JID" do
+      execute(XMPP::JID.new('othello@venice.lit/foo')).should be_true
+    end
+
+    it "doesn't compare with a different string" do
+      execute('spam@venice.lit/foo').should be_false
+    end
+
+    it "doesn't compare with a different resource" do
+      execute('othello@venice.lit/bar').should be_false
+    end
+  end
+
+  describe '#=~' do
+    it "compares with an equal string" do
+      execute('othello@venice.lit/foo').should be_true
+    end
+
+    it "compares with a bare string" do
+      execute('othello@venice.lit').should be_true
+    end
+
+    it "compares with a different resource" do
+      execute('othello@venice.lit/bar').should be_true
+    end
+
+    it "doesn't compare with a different string" do
+      execute('spam@venice.lit').should be_false
     end
   end
 

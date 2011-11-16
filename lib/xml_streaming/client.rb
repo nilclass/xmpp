@@ -23,12 +23,7 @@ class XMLStreaming::Client < EventMachine::Connection
   end
 
   def send_stanza(stanza)
-    if stanza.text.empty?
-      data = stanza.to_xml.gsub(/<([^>]+)><\/[^>]+>/, '<\1/>')
-    else
-      data = stanza.to_xml
-    end
-    send_data(data)
+    send_data(stanza.to_xml)
   end
 
   def receive_stanza(stanza)

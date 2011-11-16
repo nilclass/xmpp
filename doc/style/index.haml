@@ -1,0 +1,43 @@
+
+#container
+  .log-widget
+    %div This is a log message
+    %div This is another log message
+  .roster-widget
+    .item
+      .jid hamlet@denmark.lit
+      .status.away{:title => "Away"}
+      .actions
+        %button Chat
+        .dropdown
+          %button more
+          %menu
+            Details
+            Remove
+    .item
+      .jid othello@venice.lit
+      .status.available{:title => "Available"}
+      .actions
+        %button Chat
+        %button Stream
+        .dropdown
+          %button more
+          %menu
+            Details
+            Remove
+
+  .conversations
+    .conversation-widget
+      %header
+        Conversation with othello@venice.lit
+      .messages
+        .message 
+          .from othello
+          .body Foo
+        .message
+          .from hamlet
+          .body Bar
+      %footer
+        .message
+          .from hamlet
+          %input.body

@@ -11,6 +11,10 @@ end
 
 EM.run do
   builder = Rack::Builder.new do
+    map '/styleguide' do
+      run Styleguide
+    end
+
     map '/socket' do
       run UI::Connection.new :backend => { :debug => true }
     end

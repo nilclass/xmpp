@@ -6,6 +6,7 @@ class XMPP::Client < XMLStreaming::Client
   attr :ui
   attr :iq
   attr :message
+  attr :otr
 
   def self.connect(ui, jid)
     jid = XMPP::JID.new(jid) unless jid.is_a?(XMPP::JID)
@@ -20,6 +21,9 @@ class XMPP::Client < XMLStreaming::Client
     @sasl = XMPP::SASL.new(self)
     @iq = XMPP::IQFactory.new(self)
     @message = XMPP::MessageFactory.new(self)
+    @otr = XMPP::Client::OTR.new(@jid.bare, "xmpp",
+      XMPP.root.join('data', 'keys', @jid.bare).to_s,
+      XMPP.root.join('data', 'fingerprints', @jid.bare).to_s)
     jump(:init)
     super()
   end

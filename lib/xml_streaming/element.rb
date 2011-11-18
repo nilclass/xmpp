@@ -5,7 +5,7 @@ class XMLStreaming::Element
   attr :attributes
   attr :uri
   attr :namespaces
-  attr :text
+  attr :text, true
   attr :children
 
   def self.cast(other)

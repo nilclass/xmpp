@@ -1,0 +1,21 @@
+= ruby-otr
+
+This is a ruby binding for the Off The Record messaging library.
+
+== Install
+
+You need a C compiler and build tools set up and libotr installed.
+
+ rake build
+
+== Usage
+
+See examples in doc/.
+
+== License
+
+Copyright (C) 2011 by Marius Hanne <marius.hanne@sourceagency.org>
+
+This project is released under the MIT license.
+
+See COPYING file for details.

@@ -1,0 +1,36 @@
+# -*- mode:ruby -*-
+
+def run cmd
+  puts ">> #{cmd}"
+  system(cmd)
+end
+
+desc "Clean up"
+task :clean do
+  run "cd ext && make clean"
+end
+
+
+desc "Build the extension"
+task :build => :clean do
+  run "cd ext && cflags='-Wall' ruby extconf.rb && make"
+end
+
+begin
+  require 'jeweler'
+  require File.expand_path('../lib/otr/version.rb', __FILE__)
+
+  Jeweler::Tasks.new do |gem|
+    # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
+    gem.name = "ruby-otr"
+    gem.summary = %Q{Ruby bindings for libotr}
+    gem.description = %Q{Off-The-Record messaging in Ruby. See http://www.cypherpunks.ca/otr/ for details on OTR.}
+    gem.email = "marius.hanne@sourceagency.org"
+    gem.homepage = ""
+    gem.authors = ["Marius Hanne"]
+    gem.version = OTR::Version::STRING
+  end
+
+rescue LoadError
+  $stderr.puts "WARNING: failed to load jeweler gem. You won't be able to generate the gemspec. Install with 'gem install jeweler'"
+end
